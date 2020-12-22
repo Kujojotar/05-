@@ -36,6 +36,8 @@ public class PlayerService implements Runnable {
 
             DataOutputStream fdos=new DataOutputStream(firstPlayerSocket.getOutputStream());
             DataOutputStream sdos=new DataOutputStream(secondPlayerSocket.getOutputStream());
+            fdos.writeUTF("----------游戏已经开始----------");
+            sdos.writeUTF("----------游戏已经开始----------");
             while(true) {
                 res = fdis.readInt()-sdis.readInt();
                 if (res == 1 || res==-2) {
@@ -53,18 +55,6 @@ public class PlayerService implements Runnable {
             }
         }catch(IOException e){
             e.printStackTrace();
-        }
-    }
-
-    public static char Exam(int fchoice,int schoice){
-        if(fchoice==1&&schoice==2 || fchoice==2&&schoice==3 || fchoice==3&&schoice==1){
-            return 'f';
-        }
-        else if(fchoice==2&&schoice==1 || fchoice==3&&schoice==2 || fchoice==1&&schoice==3){
-            return 'w';
-        }
-        else{
-            return 't';
         }
     }
 

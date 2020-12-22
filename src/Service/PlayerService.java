@@ -9,7 +9,6 @@ import java.lang.Runnable;
 public class PlayerService implements Runnable {
     Socket firstPlayerSocket;
     Socket secondPlayerSocket;
-    private int totalgame=0;
     private int numberOfFirstWin=0;
     private int numberOfSecondWin=0;
 
@@ -30,7 +29,7 @@ public class PlayerService implements Runnable {
         while(secondPlayerSocket==null){
         }
         System.out.println("用户均已上线");
-        char res;
+        int res;
         try {
             DataInputStream fdis = new DataInputStream(firstPlayerSocket.getInputStream());
             DataInputStream sdis=new DataInputStream(secondPlayerSocket.getInputStream());
@@ -38,19 +37,16 @@ public class PlayerService implements Runnable {
             DataOutputStream fdos=new DataOutputStream(firstPlayerSocket.getOutputStream());
             DataOutputStream sdos=new DataOutputStream(secondPlayerSocket.getOutputStream());
             while(true) {
-                res = Exam(fdis.readInt(), sdis.readInt());
-                if (res == 'w') {
-                    totalgame++;
+                res = fdis.readInt()-sdis.readInt();
+                if (res == 1 || res==-2) {
                     numberOfFirstWin++;
                     fdos.writeUTF("恭喜您赢了,目前您赢了" + numberOfFirstWin + "局");
                     sdos.writeUTF("很遗憾您输了，再接再厉。");
-                } else if (res == 'f') {
-                    totalgame++;
+                } else if (res == -1 || res==2) {
                     numberOfSecondWin++;
                     fdos.writeUTF("很遗憾您输了，再接再厉。");
                     sdos.writeUTF("恭喜您赢了,目前您赢了" + numberOfSecondWin + "局");
                 }else{
-                    totalgame++;
                     fdos.writeUTF("平局");
                     sdos.writeUTF("平局");
                 }

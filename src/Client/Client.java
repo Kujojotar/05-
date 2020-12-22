@@ -10,10 +10,11 @@ public class Client {
             Socket socket = new Socket("localhost", 1234);
             DataInputStream dis=new DataInputStream(socket.getInputStream());
             DataOutputStream dos=new DataOutputStream(socket.getOutputStream());
-            char c='a';
-            dos.writeChar(c);
-            dos.flush();
             Scanner in=new Scanner(System.in);
+            dos.writeUTF(in.next());
+            dos.flush();
+            System.out.println("等待用户连接.......");
+            System.out.println(dis.readUTF()+"\n");
 
             while(true){
                 System.out.println("------------------------------------------------------");

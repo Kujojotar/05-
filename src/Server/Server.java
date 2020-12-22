@@ -13,23 +13,26 @@ public class Server {
      private static List<PlayerService> gameList=new ArrayList<>();
      public static void main(String[] args) {
             try {
-                char choice;
+                String choice;
                 ServerSocket server = new ServerSocket(PORT);
                 System.out.println("服务器已启动");
                 while(true){
                     Socket socket= server.accept();
                     System.out.println("用户"+socket.getLocalPort()+"已经连接到服务器");
                     DataInputStream dis=new DataInputStream(socket.getInputStream());
-                    choice=dis.readChar();
-                    if(choice=='a'){
+                    choice=dis.readUTF();
+                    if(choice.equals("a")){
                         PlayerService s=new PlayerService(socket);
                         gameList.add(s);
                     }
                     else{
+                        DataOutputStream dos=new DataOutputStream(socket.getOutputStream());
+                        dos.writeUTF("请输入您要加入用户的ip地址:");
                         String tmp=dis.readUTF();
                         for(PlayerService e:gameList){
                             if(tmp.equals(e.getFirstPlayerSocket().getInetAddress().getHostAddress())){
                                 e.join(socket);
+                                new DataOutputStream(e.getFirstPlayerSocket().getOutputStream()).writeUTF("用户已成功连接.");
                                 e.run();
                                 break;
                             }
